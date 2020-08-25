@@ -13,13 +13,14 @@ const categoryRoutes = require('./routes/category');
 const productRoutes = require('./routes/product');
 const braintreeRoutes = require('./routes/braintree');
 const orderRoutes = require('./routes/order');
+const config = require('./config/dev')
 
 // app
 const app = express();
 
 // db
 mongoose
-    .connect(process.env.DATABASE, {
+    .connect('mongodb+srv://ecommerce:d3g86bUYrXavB8Dw@cluster0.jqdc1.mongodb.net/test?retryWrites=true&w=majority/shoping', {
         useNewUrlParser: true,
         useCreateIndex: true
     })
@@ -41,6 +42,10 @@ app.use('/api', braintreeRoutes);
 app.use('/api', orderRoutes);
 
 const port = process.env.PORT || 8000;
+
+if(process.env.NODE_ENV ==='production'){
+    app.use(express.static(path.join(__dirname, "ecommerce-front/build")));
+}
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
